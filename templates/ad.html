@@ -116,6 +116,8 @@
 									function openwindow() {
 							    		popup = window.open('{{ server_location }}/consent?hitId={{ hitid }}&assignmentId={{ assignmentid }}&workerId={{ workerid }}','Popup','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width='+1024+',height='+768+'');
 							  		}  // hypothesis: this function sends the hitID, assignmentID, workerID to the server, brings up a new window with the specified height/width. We are unsure where these variables (hitid, assignmentid, workerid) are getting set, but we are not currently changing them or worrying about this because the script seems to work. One idea is that this information might be sent from AMT or perhaps contained in the experiment's config.txt file
+							  		// Another hypothesis about where the information for these variables is getting set (or perhaps just being pulled/directed from the AMT server) is in static/js/jspsych/jspsych.js.
+							  		// window.open(.../consent...) means 'when you open the pop-up window, go to /consent and pass hitid, assignmentid, workerid'
 							    </script> 
 							    <div class="alert alert-warning">
 							    	<b>Warning</b>: Please disable pop-up blockers before continuing.

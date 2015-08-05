@@ -13,7 +13,7 @@
         <link rel=stylesheet href="/static/css/style.css" type="text/css">
         <script type="text/javascript">
             function onexit() {
-              self.close(); // no harm, no foul here
+              self.close(); // onexit is used when participant indicates that they don't want to do the HIT. Closes the pop-up window that contains the experiment
             }
         </script>
     </head>
@@ -23,7 +23,8 @@
                 <h1>We need your consent to proceed</h1>
                 <hr>
                 <div class="legal well">
-                    <p>
+                    <!-- IRB approved language goes here -->
+                    <p> 
                     You have been invited to take part in a research study named BLAH BLAH
                     </p>
                     <p>
