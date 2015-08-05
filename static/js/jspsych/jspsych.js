@@ -47,39 +47,41 @@
             exp_blocks = [];
             opts = {};
             initialized = false;
-            curr_block = 0;
+            curr_block = 0; // zero-indexing, so zero means 1 (pretty sure)
 
             // check if there is a body element on the page
-            var default_display_element = $('body');
-            if (default_display_element.length === 0) {
+            var default_display_element = $('body'); 
+            //'body' refers to the location on the page where the text will be shown (remember PTB concept of 'Screen' we've talked about before.)
+            //'jspsych-target' has been set as  div within body (in exp.html)
+            if (default_display_element.length === 0) { // if body doesn't exist, create it. But you probably want to set <body> in the html yourself
                 $(document.documentElement).append($('<body>'));
                 default_display_element = $('body');
             }
 
             var defaults = {
                 'display_element': default_display_element,
-                'on_finish': function(data) {
+                'on_finish': function(data) { // seems to be initializing 'on_finish', on_trial_start, etc. as undefined so you can later plug things in
+                    return undefined; // not sure what function(data) is, appears to be set on line 94
+                },
+                'on_trial_start': function() { // not called in exp.html, possible we may want to do something with this later? But not sure what it does or how it works.
                     return undefined;
                 },
-                'on_trial_start': function() {
+                'on_trial_finish': function() { // not called in exp.html, possible we may want to do something with this later? But not sure what it does or how it works.
                     return undefined;
                 },
-                'on_trial_finish': function() {
-                    return undefined;
-                },
-                'on_data_update': function(data) {
+                'on_data_update': function(data) { //unclear if gets called after every trial (which is what we want) or after on_finish (which we assume means after the entire experiment has finished).
                     return undefined;
                 }
             };
 
             // import options
-            opts = $.extend({}, defaults, options);
+            opts = $.extend({}, defaults, options); // not sure what $ means or why it is called here. it seems like $ can stand in as a convention for an oft-used function (http://stackoverflow.com/questions/3107543/what-is-the-symbol-used-for-in-javascript). $ appears to be set on line 8 of this file. Also not sure what 'import options' refers to. Importing from db?
 
             // set target
-            DOM_target = opts.display_element;
+            DOM_target = opts.display_element; // DOM = Document Object Model. we think a DOM is a effectively a "tree" that contains all the pieces of the html document. we think this is setting a DOM object within `display_element` (which has not been specified yet)
 
             // add CSS class to DOM_target
-            DOM_target.addClass('jspsych-display-element');
+            DOM_target.addClass('jspsych-display-element'); // CSS styling for `jspsych-display-element` is set in static/css/jspsych.css
 
             run();
         };
@@ -90,13 +92,13 @@
         // is removed and each array entry will be a single trial.
 
         core.data = function() {
-            var all_data = [];
+            var all_data = []; // initialize all_data variable
             
-            for (var i = 0; i < exp_blocks.length; i++) {
-                all_data[i] = exp_blocks[i].data;
+            for (var i = 0; i < exp_blocks.length; i++) { // hypothesis is that exp_blocks is set in experiment_blocks.test_block (or another experiment_blocks object) is set within exp.html and contains button presses, RTs, etc.
+                all_data[i] = exp_blocks[i].data; // this is a "for loop" that takes the data in each separate exp_block and concatenates it into a single all_data variable that gets passed to on_finish or on_data_update within core.init
             }
 
-            return all_data;
+            return all_data; // return the all_data variable that now contains all of the data across the experiment blocks
         };
 
         
@@ -186,7 +188,7 @@
         //
         function run() {
             // take the experiment structure and dynamically create a set of blocks
-            exp_blocks = new Array(opts.experiment_structure.length);
+            exp_blocks = new Array(opts.experiment_structure.length); // need to come back to this once we figure out where opts.experiment_structure is set
 
             // iterate through block list to create trials
             for (var i = 0; i < exp_blocks.length; i++) {
@@ -197,9 +199,9 @@
                     throw new Error("Failed attempt to create trials using plugin type " + plugin_name + ". Is the plugin loaded?");
                 }
 
-                var trials = jsPsych[plugin_name]["create"].call(null, opts["experiment_structure"][i]);
+                var trials = jsPsych[plugin_name]["create"].call(null, opts["experiment_structure"][i]); // call is a way to invoke a "function method" (see: http://yehudakatz.com/2011/08/11/understanding-javascript-function-invocation-and-this/). 
 
-                exp_blocks[i] = createBlock(trials);
+                exp_blocks[i] = createBlock(trials); //createBlock is defined on line 224
             }
 
             // record the start time
@@ -209,23 +211,23 @@
             exp_blocks[0].next();
         }
 
-        function nextBlock() {
+        function nextBlock() { // iterate the block counter. this seems to be how it knows to progress linearly through block IDs (1 -> 2 -> 3, etc.)
             curr_block += 1;
             if (curr_block == exp_blocks.length) {
                 finishExperiment();
             }
             else {
-                exp_blocks[curr_block].next();
+                exp_blocks[curr_block].next(); // .next method progresses from the current object.block to the next "sibling" in this object. seems to progress in sequential order. we are not sure why you can't just use a numeric index. We think it is iterating sequentially by 1 position, but not sure. We think next is definied on line 232 of this file.
             }
         }
 
         function createBlock(trial_list) {
             var block = {
-                trial_idx: -1,
+                trial_idx: -1, // this is like setting the index to 0, but remember that here 0 = 1 because javascript is zero-indexed
 
-                trials: trial_list,
+                trials: trial_list, // trial_list comes from line 202-->204
 
-                data: [],
+                data: [], // initializing data
 
                 next: function() {
 
@@ -236,44 +238,44 @@
                         opts.on_trial_finish();
                     };
 
-                    this.trial_idx = this.trial_idx + 1;
+                    this.trial_idx = this.trial_idx + 1; // incremement trial_idx
 
-                    var curr_trial = this.trials[this.trial_idx];
+                    var curr_trial = this.trials[this.trial_idx]; // find current trial in this.trials
 
-                    if (typeof curr_trial == "undefined") {
+                    if (typeof curr_trial == "undefined") { // if current trial is undefined, execute done() because experiment is complete
                         return this.done();
                     }
 
                     // call on_trial_start()
-                    opts.on_trial_start();
+                    opts.on_trial_start(); // on_trial_start is one of the experiment_blocks that's initialized on line 66
 
-                    do_trial(this, curr_trial);
+                    do_trial(this, curr_trial); // defined on line 273. potentially where trial actually gets presented? (like `flip screen` in PTB)
                 },
 
                 writeData: function(data_object) {
                     this.data[this.trial_idx] = data_object;
-                    opts.on_data_update(data_object);
+                    opts.on_data_update(data_object); //we think writeData is function that's interfacing between currently active variables in javascript and the participants.db database, but we are unsure how frequently these two things are interacting (ie, after every trial? at the end of the block? at the end of the experiment?)
                 },
 
 
-                done: nextBlock,
+                done: nextBlock, // is a function. iterate to the "next" block using .next as an iterator method. nextBlock is defined on 214. We think this could be parsed as "when this is DONE, call nextBlock"
 
-                num_trials: trial_list.length
+                num_trials: trial_list.length // update the number of trials based on the length of the trial list
             };
 
-            return block;
+            return block; // when you run createBlock, the output is a variable 'block' that contains `trials`, `data`, and `num_trials`
         }
 
         function finishExperiment() {
-            opts["on_finish"].apply((new Object()), [core.data()]);
-        }
+            opts["on_finish"].apply((new Object()), [core.data()]); // when your trial block is the last block (current trial block == length of trial blocks; remember that there's zero indexing so that's why this works), end the current trial block and save the data (see line 137 in exp.html)
+        } 
 
-        function do_trial(block, trial) {
+        function do_trial(block, trial) { // we have no idea what this does and "do_trial" does not appear in any other files in this directory
             // execute trial method
             jsPsych[trial.type]["trial"].call(this, DOM_target, block, trial, 1);
         }
 
-        return core;
+        return core; // we think core is the placeholder variable for the overarching experiment structure, simililar to 'this', but we think 'this' is trial and block specific and is therefore contained within 'core'
     })();
     
     jsPsych.dataAPI = (function() {

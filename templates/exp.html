@@ -26,16 +26,20 @@
         <link href="/static/css/jspsych.css" rel="stylesheet" type="text/css"></link>
     </head>
     
+    <!-- This is the html that creates a 'Screen' (in PTB terms) for the jspsych functions.
+     Text, images, etc. are not rendered in html, they are presented via the jspsych functions -->
     <body>
         <div id='jspsych-target'></div>
     </body>
+
+
     <script>
         /* load psiturk */
-        var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
+        var psiturk = new PsiTurk(uniqueId, adServerLoc, mode); // Not sure what PsiTurk is doing. It appears to be a function. Where is this function defined?
 
         /* text blocks */
 
-        var welcome_block = {
+        var welcome_block = { // welcome_block becomes a class/property/whatever of the object experiment_block, which is somehow fed into jsPsych, we think that looking into jsPsych.init will help explain what's happening
             type: "text",
             text: "Welcome to the experiment. Press any key to begin."
         };
