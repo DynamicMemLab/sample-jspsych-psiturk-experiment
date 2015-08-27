@@ -287,25 +287,25 @@
         //      to every row. for example, if append_data = {"subject": 4},
         //      then a column called subject will be added to the data and
         //      it will always have the value 4.
-        module.dataAsCSV = function(append_data) {
-            var dataObj = jsPsych.data();
-            return JSON2CSV(flattenData(dataObj, append_data));
-        };
+        // module.dataAsCSV = function(append_data) {
+        //     var dataObj = jsPsych.data();
+        //     return JSON2CSV(flattenData(dataObj, append_data));
+        // }; // gets called within the localSave module   
 
-        module.localSave = function(filename, format, append_data) {
+        // module.localSave = function(filename, format, append_data) {
             
-            var data_string;
+        //     var data_string;
             
-            if(format == 'JSON' || format == 'json') {
-                data_string = JSON.stringify(flattenData(jsPsych.data(), append_data));
-            } else if(format == 'CSV' || format == 'csv') {
-                data_string = module.dataAsCSV(append_data);
-            } else {
-                throw new Error('invalid format specified for jsPsych.dataAPI.localSave');
-            }
+        //     if(format == 'JSON' || format == 'json') {
+        //         data_string = JSON.stringify(flattenData(jsPsych.data(), append_data));
+        //     } else if(format == 'CSV' || format == 'csv') {
+        //         data_string = module.dataAsCSV(append_data);
+        //     } else {
+        //         throw new Error('invalid format specified for jsPsych.dataAPI.localSave');
+        //     }
             
-            saveTextToFile(data_string, filename);
-        };
+        //     saveTextToFile(data_string, filename);
+        // }; // not called anywhere else. We suspect this is the method we would want to use if we are saving a local version of the data after each trial
         
         module.getTrialsOfType = function(trial_type){ // this gets call in exp.html on line 105. We think that you can feed in a given trial type (eg, single stim, multiple stim) and this function (module?) will return `trials`
             var data = jsPsych.data();
