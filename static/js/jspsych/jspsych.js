@@ -278,7 +278,7 @@
         return core; // we think core is the placeholder variable for the overarching experiment structure, simililar to 'this', but we think 'this' is trial and block specific and is therefore contained within 'core'
     })();
     
-    jsPsych.dataAPI = (function() {
+    jsPsych.dataAPI = (function() { // we think this is an anonymous function because it has the syntax `(function (){//guts go here}())`
         
         var module = {};
         
@@ -307,7 +307,7 @@
             saveTextToFile(data_string, filename);
         };
         
-        module.getTrialsOfType = function(trial_type){
+        module.getTrialsOfType = function(trial_type){ // this gets call in exp.html on line 105. We think that you can feed in a given trial type (eg, single stim, multiple stim) and this function (module?) will return `trials`
             var data = jsPsych.data();
             
             data = flatten(data);
@@ -320,7 +320,7 @@
             }
             
             return trials;
-        };
+        }; // when commented this out and ran in debug mode, experiment ran but didn't get a "done" screen
         
         module.displayData = function(format) {
             format = (typeof format === 'undefined') ? "json" : format.toLowerCase();
@@ -945,4 +945,4 @@
         return out;
     }
 
-})(jQuery);
+})(jQuery); // we think that jQuery is being passed in as a global variable to the jsPsych function
