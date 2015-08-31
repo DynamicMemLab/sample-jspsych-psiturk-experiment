@@ -320,116 +320,116 @@
             }
             
             return trials;
-        }; // when commented this out and ran in debug mode, experiment ran but didn't get a "done" screen
+        }; // when commented this out and ran in debug mode, experiment ran but didn't get a "done" screen. We would have expected that the experiment would have broken prior to starting the first trial because it would not have known what type the trial was meant to be.
         
-        module.displayData = function(format) {
-            format = (typeof format === 'undefined') ? "json" : format.toLowerCase();
-            if(format != "json" && format != "csv") {
-                console.log('Invalid format declared for displayData function. Using json as default.');
-                format = "json";
-            }
+        // module.displayData = function(format) {
+        //     format = (typeof format === 'undefined') ? "json" : format.toLowerCase();
+        //     if(format != "json" && format != "csv") {
+        //         console.log('Invalid format declared for displayData function. Using json as default.');
+        //         format = "json";
+        //     }
             
-            var data_string;
+        //     var data_string;
             
-            if(format == 'json') {
-                data_string = JSON.stringify(flattenData(jsPsych.data()), undefined, 1);
-            } else {
-                data_string = module.dataAsCSV();
-            } 
+        //     if(format == 'json') {
+        //         data_string = JSON.stringify(flattenData(jsPsych.data()), undefined, 1);
+        //     } else {
+        //         data_string = module.dataAsCSV();
+        //     } 
             
-            var display_element = jsPsych.getDisplayElement();
+        //     var display_element = jsPsych.getDisplayElement(); // display_element = DOM_target
             
-            display_element.append($('<pre>', {
-                html: data_string
-            }));
-        }
+        //     display_element.append($('<pre>', {
+        //         html: data_string // hypothesis: this is formatting, saying that data_string should be displayed within <html></html> in the DOM_target
+        //     }));
+        // } // This does not get called by any of the files in this project. When commeted out, no changes in experimental behavior. 
         
-        // private function to save text file on local drive
-        function saveTextToFile(textstr, filename) {
-            var blobToSave = new Blob([textstr], {
-                type: 'text/plain'
-            });
-            var blobURL = "";
-            if (typeof window.webkitURL !== 'undefined') {
-                blobURL = window.webkitURL.createObjectURL(blobToSave);
-            }
-            else {
-                blobURL = window.URL.createObjectURL(blobToSave);
-            }
+        // // private function to save text file on local drive. We are still unclear on private functions, but we think that these are functions that take a variable (or set a variable) where there can be changes made to this variable within the scope of the private function but these changes cannot get passed back out to other functions.
+        // function saveTextToFile(textstr, filename) {
+        //     var blobToSave = new Blob([textstr], {
+        //         type: 'text/plain'
+        //     });
+        //     var blobURL = "";
+        //     if (typeof window.webkitURL !== 'undefined') {
+        //         blobURL = window.webkitURL.createObjectURL(blobToSave);
+        //     }
+        //     else {
+        //         blobURL = window.URL.createObjectURL(blobToSave);
+        //     }
             
-            var display_element = jsPsych.getDisplayElement();
+        //     var display_element = jsPsych.getDisplayElement();
             
-            display_element.append($('<a>', {
-                id: 'jspsych-download-as-text-link',
-                href: blobURL,
-                css: {
-                    display: 'none'
-                },
-                download: filename,
-                html: 'download file'
-            }));
-            $('#jspsych-download-as-text-link')[0].click();
-        }
+        //     display_element.append($('<a>', {
+        //         id: 'jspsych-download-as-text-link',
+        //         href: blobURL,
+        //         css: {
+        //             display: 'none'
+        //         },
+        //         download: filename,
+        //         html: 'download file'
+        //     }));
+        //     $('#jspsych-download-as-text-link')[0].click();
+        // } // This module does not get called anywhere. 
         
         //
         // A few helper functions to handle data format conversion
         //
-        function flattenData(data_object, append_data) {
+        // function flattenData(data_object, append_data) { // append_data is whatever string or set of key-value pairs that you want appended to the data_object
 
-            append_data = (typeof append_data === undefined) ? {} : append_data;
+        //     append_data = (typeof append_data === undefined) ? {} : append_data; // This statement can be read as if append_data == undefined then (this is the ?) return {} else (this is the :) append_data
 
-            var trials = [];
+        //     var trials = [];
 
-            // loop through data_object
-            for (var i = 0; i < data_object.length; i++) {
-                for (var j = 0; j < data_object[i].length; j++) {
-                    var data = $.extend({}, data_object[i][j], append_data);
-                    trials.push(data);
-                }
-            }
+        //     // loop through data_object and append the thing from append_data to the end. We believe this is "flattening" because you are basically reducing the dimensions from 2 separate "variables" to a single data_object
+        //     for (var i = 0; i < data_object.length; i++) {
+        //         for (var j = 0; j < data_object[i].length; j++) {
+        //             var data = $.extend({}, data_object[i][j], append_data);
+        //             trials.push(data);
+        //         }
+        //     }
 
-            return trials;
-        }
+        //     return trials;
+        // } // We think this gets called in functions (modules) that are related either to saving out data or displaying data, but none of the other functions that call (dataAsCSV, dispalyData, localSave) it seem to be used so can comment this module out. 
         
         // this function based on code suggested by StackOverflow users:
         // http://stackoverflow.com/users/64741/zachary
         // http://stackoverflow.com/users/317/joseph-sturtevant
-        function JSON2CSV(objArray) {
-            var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-            var line = '';
-            var result = '';
-            var columns = [];
+        // function JSON2CSV(objArray) {
+        //     var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+        //     var line = '';
+        //     var result = '';
+        //     var columns = [];
 
-            var i = 0;
-            for (var j = 0; j < array.length; j++) {
-                for (var key in array[j]) {
-                    var keyString = key + "";
-                    keyString = '"' + keyString.replace(/"/g, '""') + '",';
-                    if ($.inArray(key, columns) == -1) {
-                        columns[i] = key;
-                        line += keyString;
-                        i++;
-                    }
-                }
-            }
+        //     var i = 0;
+        //     for (var j = 0; j < array.length; j++) {
+        //         for (var key in array[j]) {
+        //             var keyString = key + "";
+        //             keyString = '"' + keyString.replace(/"/g, '""') + '",';
+        //             if ($.inArray(key, columns) == -1) {
+        //                 columns[i] = key;
+        //                 line += keyString;
+        //                 i++;
+        //             }
+        //         }
+        //     }
 
-            line = line.slice(0, - 1);
-            result += line + '\r\n';
+        //     line = line.slice(0, - 1);
+        //     result += line + '\r\n';
 
-            for (var i = 0; i < array.length; i++) {
-                var line = '';
-                for (var j = 0; j < columns.length; j++) {
-                    var value = (typeof array[i][columns[j]] === 'undefined') ? '' : array[i][columns[j]];
-                    var valueString = value + "";
-                    line += '"' + valueString.replace(/"/g, '""') + '",';
-                }
+        //     for (var i = 0; i < array.length; i++) {
+        //         var line = '';
+        //         for (var j = 0; j < columns.length; j++) {
+        //             var value = (typeof array[i][columns[j]] === 'undefined') ? '' : array[i][columns[j]];
+        //             var valueString = value + "";
+        //             line += '"' + valueString.replace(/"/g, '""') + '",';
+        //         }
 
-                line = line.slice(0, - 1);
-                result += line + '\r\n';
-            }
+        //         line = line.slice(0, - 1);
+        //         result += line + '\r\n';
+        //     }
 
-            return result;
-        }
+        //     return result;
+        // } // Converts JSON to CSV and is called earlier on line 292 by dataToCSV. We think this is conceptually similar to something like `cell2csv` in matlab
         
         return module;
         
