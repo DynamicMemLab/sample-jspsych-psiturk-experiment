@@ -445,7 +445,7 @@
         // core.turkInfo gets information relevant to mechanical turk experiments. returns an object
         // containing the workerID, assignmentID, and hitID, and whether or not the HIT is in
         // preview mode, meaning that they haven't accepted the HIT yet.
-        module.turkInfo = function(force_refresh) {
+        module.turkInfo = function(force_refresh) { // gets called in submitToTurk
             // default value is false
             force_refresh = (typeof force_refresh === 'undefined') ? false : force_refresh;
             // if we already have the turk_info and force_refresh is false
@@ -486,7 +486,7 @@
 
         // core.submitToTurk will submit a MechanicalTurk ExternalHIT type
 
-        module.submitToTurk = function(data) {
+        module.submitToTurk = function(data) { // not called anywhere, but we suspect this is because this is the sample experiment and they're assuming we won't be using MTurk
 
             var turkInfo = core.turkInfo();
             var assignmentId = turkInfo.assignmentId;
