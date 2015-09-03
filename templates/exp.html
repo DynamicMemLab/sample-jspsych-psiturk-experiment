@@ -73,7 +73,7 @@
             }
         }];
 
-        var all_trials = jsPsych.randomization.repeat(test_stimuli, 10, true);
+        var all_trials = jsPsych.randomization.repeat(test_stimuli, 2, true); // the second parameter is repetitions (the # of times each stimulus is repeated in the task)
 
         var post_trial_gap = function() {
             return Math.floor(Math.random() * 1500) + 750;
