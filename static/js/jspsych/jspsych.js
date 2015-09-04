@@ -593,12 +593,12 @@
             return with_repetitions;
         }
         
-        function unpackArray(array) {
+        function unpackArray(array) { // can't figure this function out. It gets called as the third argument in jsPsych.randomize. Plans are to email jsPsych man to ask.
             
             var out = {};
         
             for(var i = 0; i < array.length; i++){
-                var keys = Object.keys(array[i]);
+                var keys = Object.keys(array[i]); // we think `keys` is actually calling the function `getKeys` which is set on line 875. We think it is extracting all of the keys (as in key/value pairs) from `Object` and returning the key names as an array
                 for(var k = 0; k < keys.length; k++){
                     if(typeof out[keys[k]] === 'undefined') {
                         out[keys[k]] = [];
@@ -610,7 +610,7 @@
             return out;
         }
         
-        function shuffle(array) {
+        function shuffle(array) { // randomly shuffles the order of the stimuli. Takes whatever array is the first input to jsPsych.randomize (which, in this case, is `test_stimuli`) as the names of the stimuli, etc.
           var m = array.length, t, i;
         
           // While there remain elements to shuffle…
