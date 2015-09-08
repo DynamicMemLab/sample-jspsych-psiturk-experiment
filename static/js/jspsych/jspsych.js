@@ -639,7 +639,7 @@
         
         var module = {};
         
-        module.getKeyboardResponse = function(callback_function, valid_responses, rt_method, persist) {
+        module.getKeyboardResponse = function(callback_function, valid_responses, rt_method, persist) { // gets called within the jspsych-single-stim.js plugin. We think this defines the guts of how participant (in AMT-speak, `worker`) keypresses are recorded.
 
             rt_method = (typeof rt_method === 'undefined') ? 'date' : rt_method;
             if (rt_method != 'date' && rt_method != 'performance') {
@@ -723,7 +723,7 @@
             
         };
         
-        module.cancelKeyboardResponse = function(listener) {
+        module.cancelKeyboardResponse = function(listener) { // we think this turns off listening during the ITI. Gets called on line 75 of `jspsych-stingle-stim.js`
             // remove the listener from the doc
             $(document).off(listener.type, listener.fn);
             
@@ -733,7 +733,7 @@
             }
         };
         
-        module.cancelAllKeyboardResponses = function() {
+        module.cancelAllKeyboardResponses = function() { // this is not called
             for(var i = 0; i< keyboard_listeners.length; i++){
                 $(document).off(keyboard_listeners[i].type, keyboard_listeners[i].fn);
             }
@@ -868,11 +868,11 @@
         // They aren't considered part of the normal API for the core library.
         //
 
-        module.normalizeTrialVariables = function(trial, protect) {
+        module.normalizeTrialVariables = function(trial, protect) { // gets called on line 49 of `jspsych-single-stim.js` We are unsure why/where it gets used, but from comments in plugin file, behavior seems sort of like `eval`.
 
             protect = (typeof protect === 'undefined') ? [] : protect;
 
-            var keys = getKeys(trial);
+            var keys = getKeys(trial); // getKeys is set as a function in this section on line 920. 
 
             var tmp = {};
             for (var i = 0; i < keys.length; i++) {
@@ -900,7 +900,7 @@
 
         // if possible_array is not an array, then return a one-element array
         // containing possible_array
-        module.enforceArray = function(params, possible_arrays) {
+        module.enforceArray = function(params, possible_arrays) { // gets called on line 18 of `jspsych-single-stim.js`
 
             // function to check if something is an array, fallback
             // to string method if browser doesn't support Array.isArray
@@ -917,7 +917,7 @@
             return params;
         };
         
-        function getKeys(obj) {
+        function getKeys(obj) { // We think this is set as a function and not a module becuase it's only called by another module within the scope of the current API anonymous funciton. It gets called on line 875 in the current file.
             var r = [];
             for (var k in obj) {
                 if (!obj.hasOwnProperty(k)) continue;
